@@ -1,0 +1,78 @@
+version: '3'
+services:
+
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    networks:
+      - brokers-net
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ALLOW_ANONYMOUS_LOGIN: 'yes'
+
+  kafka1:
+    image: bitnami/kafka:latest
+    networks:
+      - brokers-net
+    depends_on:
+      - zookeeper
+    ports:
+      - 9091:9091
+    # volumes:
+    #   - '.\.volume\kafka1-persistence:/bitnami/kafka'
+    environment:
+      KAFKA_CFG_ADVERTISED_LISTENERS: INSIDE://kafka1:19091,OUTSIDE://localhost:9091
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_CFG_LISTENERS: INSIDE://:19091,OUTSIDE://:9091
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
+      ALLOW_PLAINTEXT_LISTENER: 'yes'
+      KAFKA_CFG_BROKER_ID: 1
+
+  kafka2:
+    image: bitnami/kafka:latest
+    networks:
+      - brokers-net
+    depends_on:
+      - zookeeper
+    ports:
+      - 9092:9092
+    # volumes:
+    #   - '.\.volume\kafka2-persistence:/bitnami/kafka'
+    environment:
+      KAFKA_CFG_ADVERTISED_LISTENERS: INSIDE://kafka2:19092,OUTSIDE://localhost:9092
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_CFG_LISTENERS: INSIDE://:19092,OUTSIDE://:9092
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
+      ALLOW_PLAINTEXT_LISTENER: 'yes'
+      KAFKA_CFG_BROKER_ID: 2
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop:latest
+    networks:
+      - brokers-net
+    depends_on:
+      - kafka1
+      - kafka2
+    ports:
+      - 19000:9000
+    environment:
+      KAFKA_BROKERCONNECT: kafka1:19091,kafka2:19092
+
+  rabbitmq:
+    image: bitnami/rabbitmq:latest
+    ports:
+      - 15672:15672
+      - 5672:5672
+    environment:
+      RABBITMQ_NODE_PORT_NUMBER: 5672
+      RABBITMQ_MANAGEMENT_PORT_NUMBER: 15672
+      RABBITMQ_USERNAME: root
+      RABBITMQ_PASSWORD: password
+    networks:
+      - brokers-net
+
+networks:
+  brokers-net:
+    driver: bridge
