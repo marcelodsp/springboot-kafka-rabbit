@@ -14,23 +14,23 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class FuncionarioService {
 
-	private final FuncionarioRepository repository;
-	private final KafkaProducer kafkaService;
+    private final FuncionarioRepository repository;
+    private final KafkaProducer kafkaService;
 
-	public Flux<Funcionario> listFuncionarios() {
-		return repository.findAll();
-	}
+    public Flux<Funcionario> listFuncionarios() {
+        return repository.findAll();
+    }
 
-	@Transactional
-	public Mono<Funcionario> save(Funcionario funcionario, boolean sendMessage) {
-		return repository.save(funcionario).doOnSuccess(emp -> {
-			if (sendMessage)
-				kafkaService.sendToKafka(emp);
-		});
-	}
+    @Transactional
+    public Mono<Funcionario> save(Funcionario funcionario, boolean sendMessage) {
+        return repository.save(funcionario).doOnSuccess(emp -> {
+            if (sendMessage)
+                kafkaService.sendToKafka(emp);
+        });
+    }
 
-	public Mono<Funcionario> findById(String id) {
-		return repository.findById(id);
-	}
+    public Mono<Funcionario> findById(String id) {
+        return repository.findById(id);
+    }
 
 }

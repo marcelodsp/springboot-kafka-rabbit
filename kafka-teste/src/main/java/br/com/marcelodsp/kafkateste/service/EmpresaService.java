@@ -13,23 +13,23 @@ import reactor.core.publisher.Mono;
 @Service
 public class EmpresaService {
 
-	private final EmpresaRepository repository;
-	private final KafkaProducer kafkaService;
+    private final EmpresaRepository repository;
+    private final KafkaProducer kafkaService;
 
-	public Flux<Empresa> listEmpresas() {
-		return repository.findAll();
-	}
+    public Flux<Empresa> listEmpresas() {
+        return repository.findAll();
+    }
 
-	public Mono<Empresa> save(Empresa empresa, boolean sendMessage) {
-		return repository.save(empresa)
-				.doOnSuccess(emp -> {
-					if (sendMessage)
-						kafkaService.sendToKafka(emp);
-				});
-	}
+    public Mono<Empresa> save(Empresa empresa, boolean sendMessage) {
+        return repository.save(empresa)
+                .doOnSuccess(emp -> {
+                    if (sendMessage)
+                        kafkaService.sendToKafka(emp);
+                });
+    }
 
-	public Mono<Empresa> findById(String id) {
-		return repository.findById(id);
-	}
+    public Mono<Empresa> findById(String id) {
+        return repository.findById(id);
+    }
 
 }
