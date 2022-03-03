@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+
+  rabbit-api:
+    container_name: rabbit-api
+    build:
+      context: .\rabbit-teste
+    ports:
+      - 8091:8091
+    networks:
+      - minha-rede
+
+  kafka-api:
+    container_name: kafka-api
+    build:
+      context: .\kafka-teste
+    ports:
+      - 8090:8090
+    networks:
+      - minha-rede
+
+networks:
+  minha-rede:
+    driver: bridge

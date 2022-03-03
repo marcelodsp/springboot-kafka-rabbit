@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-KafkaTesteApplication<kafka-teste>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "br.com.marcelodsp.kafkateste.KafkaTesteApplication",
+            "projectName": "kafka-teste",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-RabbitTesteApplication<rabbit-teste>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "br.com.marcelodsp.rabbitteste.RabbitTesteApplication",
+            "projectName": "rabbit-teste",
+            "args": ""
+        }
+    ]
+}

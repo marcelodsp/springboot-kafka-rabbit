@@ -1,0 +1,43 @@
+server:
+  port: 8090
+  
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: test
+      authentication-database: admin
+      username: root
+      password: password
+          
+  webflux:
+    base-path: /kafka-api   
+    
+  rabbitmq:
+    addresses: localhost:5672
+    password: password
+    username: root 
+    
+  kafka:
+    bootstrap-servers:
+    - localhost:9091
+    - localhost:9092
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+---
+my-config:
+  
+  kafka:
+    topic-name: topic.testes
+    
+  rabbit:
+    exchange-name: exchange.testes
+    queue-name: queue.testes
+  
+---
+logging:
+  level:
+    "[org.springframework.web.reactive]": DEBUG
+    "[org.springframework.data.mongodb]": INFO
+
